@@ -10,7 +10,7 @@ green = (0,255,0)
 
 class Wall (pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(random.choice([red, green, blue]))
         self.rect = self.image.get_rect()
@@ -36,7 +36,7 @@ class MovingWall(Wall):
 
 class MySprite(pygame.sprite.Sprite):
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.image = pygame.image.load("rabbit.png")
         self.rect = self.image.get_rect()
 
@@ -52,12 +52,15 @@ class Game():
         self.dx = 0
         self.dy = 0
         self.gravity = 1
+
         self.sprites = pygame.sprite.Group()
         self.blocks = pygame.sprite.Group()
         self.add_blocks()
+
         self.player = MySprite()
         self.player.rect.center = self.rect.center
         self.sprites.add(self.player)
+
         """for i in range (10):
             newsprite = MySprite()
             newsprite.rect.x = random.randint(0, self.width)
