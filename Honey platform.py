@@ -19,19 +19,21 @@ def main():
     pygame.display.set_caption("Honey's adbenture")
     FPSCLOCK = pygame.time.Clock()
 
-    PLAYERMOVEX = 2
+    PLAYERMOVEX = 4
     PLAYERMOVEY = 10
 
     surface = pygame.display.set_mode((width, height))
     x = 100
     y = 100
+    dx = 0
+    dy = 0
     data = [x, y, 30, 30]
 
     loop = True
 
     while loop is True:
 
-        dx = dy = 0
+        dx = 0
 
         for event in pygame.event.get():
 
@@ -44,7 +46,7 @@ def main():
 
             elif event.type == KEYDOWN:
                 if event.key in [K_w, K_UP]:
-                    dy = -10
+                    mygame.dy -= 10
 
         keys = pygame.key.get_pressed()
 
@@ -54,7 +56,7 @@ def main():
         elif keys[K_a] or keys[K_LEFT]:
             dx = 0 - PLAYERMOVEX
 
-        mygame.move(dx,dy)
+        mygame.dx += dx
         mygame.update()
 
         surface.fill((30, 30, 30))

@@ -5,12 +5,14 @@ from pygame.locals import *
 black = (0,0,0)
 white = (255,255,255)
 blue = (0,0,255)
+red = (255,0,0)
+green = (0,255,0)
 
 class Wall (pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
-        self.image.fill(blue)
+        self.image.fill(random.choice([red, green, blue]))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
@@ -46,23 +48,21 @@ class Game():
 
     def add_blocks(self):
 
-        newWall = Wall (50,50, 50, 50)
+        newWall = Wall (250,130, 75, 40)
         self.blocks.add (newWall)
-        newWall = Wall (20,20, 50, 50)
+        newWall = Wall (20,220, 50, 50)
         self.blocks.add (newWall)
-        newWall = Wall (150,190, 50, 50)
+        newWall = Wall (150,190, 100, 25)
         self.blocks.add (newWall)
-
-    def move(self, dx,dy):
-
-        self.dx = dx
-        self.dy = dy
 
     def update(self):
 
         self.gravity_calc()
 
         self.player.rect.x += self.dx
+        self.player.rect.left = max(self.player.rect.left, self.rect.left)
+        self.player.rect.right = min(self.player.rect.right, self.rect.right)
+
 
         block_hit_list = pygame.sprite.spritecollide(self.player, self.blocks, False)
         for block in block_hit_list:
@@ -73,7 +73,7 @@ class Game():
             elif self.dx <0:
                 self.player.rect.left = block.rect.right
 
-            self.dx = 0
+        self.dx = 0
 
         self.player.rect.y += self.dy
         block_hit_list = pygame.sprite.spritecollide(self.player, self.blocks, False)
@@ -83,21 +83,19 @@ class Game():
 
             if self.dy > 0:
                 self.player.rect.bottom = block.rect.top
-            elif self.dy<0:
+            elif self.dy < 0:
                 self.player.rect.top = block.rect.bottom
 
             self.dy = 0
 
+        # See if we are on the ground.
+        if self.player.rect.bottom > self.rect.bottom:
+            self.player.rect.bottom = self.rect.bottom
+            self.dy = 0
+
+
 
     def gravity_calc(self):
 
-        if self.dy == 0:
-            self.dy = 1
-        else:
-            self.dy += self.gravity
+        self.dy += self.gravity
 
-
-        # See if we are on the ground.
-        if self.player.rect.bottom >= self.rect.bottom:
-            #self.dy = 0
-            self.player.rect.bottom = self.rect.bottom
