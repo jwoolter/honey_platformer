@@ -16,6 +16,24 @@ class Wall (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
+class MovingWall(Wall):
+
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.dx = 0
+        self.dy = 0
+        self.boundary = pygame.Rect(0,0,0,0)
+
+    def update(self):
+
+        self.rect.x += self.dx
+        self.rect.y += self.dy
+
+        if not self.boundary.contains(self.rect):
+            self.dx *= -1
+            self.dy *= -1
+            print(f"out of bounds {self.dx},{self.dy}")
+
 class MySprite(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -48,14 +66,25 @@ class Game():
 
     def add_blocks(self):
 
-        newWall = Wall (250,130, 75, 40)
-        self.blocks.add (newWall)
+        newMovingWall = MovingWall(250,130,75,40)
+        newMovingWall.dy = 1
+        newMovingWall.boundary= pygame.Rect(0,60,300,240)
+        self.blocks.add(newMovingWall)
+
+        newMovingWall = MovingWall(50,50,50,15)
+        newMovingWall.dx = 1
+        newMovingWall.boundary= pygame.Rect(0,0,300,300)
+        self.blocks.add(newMovingWall)
+
+
         newWall = Wall (20,220, 50, 50)
-        self.blocks.add (newWall)
+        self.blocks.add(newWall)
         newWall = Wall (150,190, 100, 25)
-        self.blocks.add (newWall)
+        self.blocks.add(newWall)
 
     def update(self):
+
+        self.blocks.update()
 
         self.gravity_calc()
 
