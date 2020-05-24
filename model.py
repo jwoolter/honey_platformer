@@ -59,6 +59,7 @@ class Game():
 
         self.player = MySprite()
         self.player.rect.center = self.rect.center
+        self.player.rect.center = (0,0)
         self.sprites.add(self.player)
 
         """for i in range (10):
@@ -80,8 +81,12 @@ class Game():
         self.blocks.add(newMovingWall)
 
 
+        newWall = Wall (0,50,50, 30)
+        self.blocks.add(newWall)
+
         newWall = Wall (20,220, 50, 50)
         self.blocks.add(newWall)
+
         newWall = Wall (150,190, 100, 25)
         self.blocks.add(newWall)
 
@@ -119,6 +124,10 @@ class Game():
                 self.player.rect.top = block.rect.bottom
 
             self.dy = 0
+
+            if isinstance(block, MovingWall) is True:
+                self.dx+=block.dx
+
 
         # See if we are on the ground.
         if self.player.rect.bottom > self.rect.bottom:
